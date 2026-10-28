@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row align-items-center mt-5 mb-5 animate-fade-in">
+    <div class="col-lg-6">
+        <h1 class="display-title">Next-Gen Secure<br>Certificate Issuance</h1>
+        <p class="lead text-light mb-4">
+            A blockchain-inspired system ensuring integrity, authenticity, and non-repudiation of digital credentials
+            using military-grade encryption.
+        </p>
+        <div class="d-flex gap-3">
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('certificates.list_certificates') }}" class="btn btn-primary btn-lg">Go to Dashboard</a>
+            {% else %}
+            <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">Get Started</a>
+            <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-lg">Login</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-lg-6 text-center d-none d-lg-block">
+        <!-- Abstract visual or hero image could go here -->
+        <div class="glass-card p-5 mt-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" fill="var(--primary-color)"
+                class="bi bi-shield-check mb-4" viewBox="0 0 16 16">
+                <path
+                    d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.938.533.314.124.706.124 1.02 0 .287-.113.593-.289.939-.533a10.726 10.726 0 0 0 2.286-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.118.265 7.31.067 8 .067c.69 0 1.882.197 2.928.493 1.05.296 2.064.67 2.443.764.318.077.534.464.444.82-1.356 9.771-8.548 10.155-8.548 10.155S-.63 11.895.805 2.144c.09-.356.307-.743.625-.82.38-.095 1.393-.469 2.443-.764z" />
+                <path
+                    d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
+            </svg>
+            <h4 class="mb-3">Tamper-Proof Security</h4>
+            <p class="text-muted small">Powered by RSA Digital Signatures and AES Encryption.</p>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5 mb-5 g-4 animate-fade-in delay-2">
+    <div class="col-md-4">
+        <div class="glass-card h-100">
+            <h3 class="text-info mb-3">#1 Integrity</h3>
+            <p>Certificates are signed with RSA-2048 keys. Any alteration breaks the signature, ensuring 100% data
+                integrity.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="glass-card h-100">
+            <h3 class="text-warning mb-3">#2 Privacy</h3>
+            <p>Sensitive remarks are encrypted using AES-256 before storage. Only authorized personnel can decrypt and
+                view them.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="glass-card h-100">
+            <h3 class="text-success mb-3">#3 Access Control</h3>
+            <p>Strict Role-Based Access Control (RBAC) ensures only Issuers can create certificates and only you can
+                view your own.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="glass-card animate-fade-in text-center">
+            <h2 class="mb-4">Setup Multi-Factor Authentication</h2>
+            <p class="text-muted mb-4">Scan the QR code below with Google Authenticator or Microsoft Authenticator.</p>
+
+            <div class="bg-white p-3 d-inline-block rounded mb-4">
+                <img src="data:image/png;base64,{{ img_b64 }}" alt="MFA QR Code" class="img-fluid">
+            </div>
+
+            <p class="mb-3">Or enter this secret key manually:</p>
+            <code class="d-block bg-dark p-2 rounded mb-4 text-warning">{{ secret }}</code>
+
+            <div class="d-grid gap-2">
+                <a href="{{ url_for('auth.login') }}" class="btn btn-success">I have scanned the code, Proceed to
+                    Login</a>
+                <a href="{{ url_for('auth.skip_mfa', user_id=user.id) }}" class="btn btn-outline-secondary">Skip Logic
+                    (Optional)</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-5 animate-fade-in">
+    <div>
+        <h2 class="display-6 fw-bold mb-0">Certificates</h2>
+        <p class="text-muted mb-0">Manage and view your digital credentials.</p>
+    </div>
+    {% if current_user.role == 'issuer' %}
+    <a href="{{ url_for('certificates.issue_certificate') }}" class="btn btn-primary shadow">
+        <span class="me-2">+</span>Issue New
+    </a>
+    {% endif %}
+</div>
+
+{% if certificates %}
+<div class="row g-4 animate-fade-in delay-1">
+    {% for cert in certificates %}
+    <div class="col-md-6 col-lg-4">
+        <div class="modern-card h-100 d-flex flex-column position-relative border-0 shadow-lg">
+            <!-- Status Badge -->
+            <div class="position-absolute top-0 end-0 m-3">
+                {% if cert.is_revoked %}
+                <span class="badge status-revoked">REVOKED</span>
+                {% elif cert.expiry_date and cert.expiry_date < now %} <span class="badge bg-warning text-dark">
+                    EXPIRED</span>
+                    {% else %}
+                    <span class="badge status-valid">ACTIVE</span>
+                    {% endif %}
+            </div>
+
+            <div class="mb-4">
+                <h5 class="fw-bold text-primary mb-1">{{ cert.course_name }}</h5>
+                <p class="text-muted small mb-0">Issued to <span class="text-light">{{ cert.student_name }}</span></p>
+                <p class="text-muted small mb-0">Issued by <span class="text-info">{{ cert.issuer_name }}</span></p>
+            </div>
+
+            <div class="d-flex justify-content-between mb-3 border-bottom border-light pb-2"
+                style="border-color: rgba(255,255,255,0.05) !important;">
+                <div>
+                    <small class="d-block text-muted" style="font-size: 0.7rem;">ISSUED</small>
+                    <span class="small">{{ cert.issue_date.strftime('%b %d, %Y') }}</span>
+                </div>
+                {% if cert.expiry_date %}
+                <div class="text-end">
+                    <small class="d-block text-muted" style="font-size: 0.7rem;">EXPIRES</small>
+                    <span class="small">{{ cert.expiry_date.strftime('%b %d, %Y') }}</span>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if current_user.role != 'admin' %}
+            <div class="mb-4 flex-grow-1">
+                <small class="d-block text-muted mb-1" style="font-size: 0.7rem;">ENCRYPTED REMARKS</small>
+                <div class="p-2 rounded bg-dark border border-secondary text-muted small text-truncate">
+                    {{ cert.remarks }}
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="d-flex gap-2 mt-auto">
+                {% if current_user.role in ['verifier', 'issuer'] %}
+                <a href="{{ url_for('certificates.verify_certificate', cert_id=cert.id) }}"
+                    class="btn btn-sm btn-outline-light flex-grow-1">Verify</a>
+                {% endif %}
+
+                {% if current_user.role != 'admin' %}
+                <a href="{{ url_for('certificates.download_certificate', cert_id=cert.id) }}"
+                    class="btn btn-sm btn-success flex-grow-1">Download PDF</a>
+                {% endif %}
+            </div>
+
+            {% if current_user.role == 'issuer' and not cert.is_revoked %}
+            <form action="{{ url_for('certificates.revoke_certificate', cert_id=cert.id) }}" method="POST" class="mt-2"
+                onsubmit="return confirm('Are you sure you want to revoke this certificate?');">
+                <button type="submit" class="btn btn-sm btn-danger w-100">Revoke Certificate</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="text-center py-5 animate-fade-in">
+    <div class="modern-card d-inline-block p-5">
+        <h3 class="text-muted mb-3">No Certificates Found</h3>
+        <p class="text-muted mb-0">Certificates issued to you will appear here.</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

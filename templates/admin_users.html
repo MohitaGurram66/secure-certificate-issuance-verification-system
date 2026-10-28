@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="mt-4 animate-fade-in">
+    <h2 class="mb-4">User Management</h2>
+
+    <div class="glass-card p-4">
+        <div class="table-responsive">
+            <table class="table table-hover text-light">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Password Hash (Salted)</th>
+                        <th>Email</th>
+                        <th>Current Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td><span
+                                style="color: #03DAC6; font-family: monospace; font-size: 0.75rem; word-break: break-all;">{{
+                                user.password_hash }}</span></td>
+                        <td>{{ user.email }}</td>
+                        <td><span class="badge bg-secondary">{{ user.role }}</span></td>
+                        <td>
+                            {% if user.username != 'admin' %} <!-- Protect main admin -->
+                            <div class="d-flex align-items-center gap-2">
+                                <form action="{{ url_for('auth.update_user_role', user_id=user.id) }}" method="POST"
+                                    class="d-flex m-0">
+                                    <div class="input-group input-group-sm">
+                                        <select name="role" class="form-select bg-dark text-light border-secondary"
+                                            style="width: 100px;">
+                                            <option value="user" {% if user.role=='user' %}selected{% endif %}>User
+                                            </option>
+                                            <option value="issuer" {% if user.role=='issuer' %}selected{% endif %}>
+                                                Issuer</option>
+                                            <option value="verifier" {% if user.role=='verifier' %}selected{% endif %}>
+                                                Verifier</option>
+                                            <option value="admin" {% if user.role=='admin' %}selected{% endif %}>Admin
+                                            </option>
+                                        </select>
+                                        <button type="submit" class="btn btn-outline-primary">Update</button>
+                                    </div>
+                                </form>
+                                <form action="{{ url_for('auth.delete_user', user_id=user.id) }}" method="POST"
+                                    class="m-0"
+                                    onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                                        title="Delete User">Delete</button>
+                                </form>
+                            </div>
+                            {% else %}
+                            <span class="badge bg-danger">Protected</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

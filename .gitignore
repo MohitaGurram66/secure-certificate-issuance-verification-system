@@ -1,0 +1,19 @@
+# 🔐 ABSOLUTELY NEVER COMMIT KEYS
+keys/
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Flask/SQLAlchemy
+instance/
+*.db
+
+# Vercel/Render
+.vercel/
+.render/
